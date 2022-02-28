@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/service_base
+    username: postgres
+    password: postgres
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always

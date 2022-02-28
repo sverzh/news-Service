@@ -1,11 +1,15 @@
 package com.github.sverzh.newsService.service;
 
 import com.github.sverzh.newsService.exception.CustomEmptyDataException;
+import com.github.sverzh.newsService.logging.Loggable;
 import com.github.sverzh.newsService.model.Comment;
 import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.repository.CommentRepository;
 import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +29,18 @@ public class CommentService {
         this.newsRepository = newsRepository;
     }
 
-    public List<Comment> getAllCommentsByNewsId(Long newsId) {
+    @Loggable
+    public Page<Comment> getAllCommentsByNewsId(Long newsId, Pageable pageable) {
         Optional<News> newsFindOptional = newsRepository.findById(newsId);
         if (newsFindOptional.isPresent()) {
-            return commentRepository.findAllByNews(newsFindOptional.get());
+            return commentRepository.findAllByNews(newsFindOptional.get(), pageable);
         } else {
             throw new NoSuchElementException("No news with id:" + newsId + " was found");
         }
     }
 
     @Transactional
+    @Loggable
     public Comment createComment(Comment comment, Long newsId) {
         Optional<News> commentNewsOptional = newsRepository.findById(newsId);
         if (commentNewsOptional.isPresent()) {
@@ -47,11 +53,13 @@ public class CommentService {
     }
 
     @Transactional
+    @Loggable
     public Comment getComment(Long commentId, Long newsId) {
         return commentRepository.getWithNewsId(commentId, newsId);
     }
 
     @Transactional
+    @Loggable
     public Comment updateComment(Comment source, Long commentId, Long newsId) {
         Optional<Comment> commentForUpdate = commentRepository.findById(commentId);
         Optional<News> newsFindOptional = newsRepository.findById(newsId);
@@ -68,15 +76,19 @@ public class CommentService {
     }
 
     @Transactional
+    @Loggable
     public String deleteComment(Long commentId, Long newsId) {
-        Optional<Comment> commentForDelete = commentRepository.findById(commentId);
-        Optional<News> newsFindOptional = newsRepository.findById(newsId);
-        if (commentForDelete.isPresent() && newsFindOptional.isPresent()) {
-            Comment comment = commentForDelete.get();
-            commentRepository.delete(comment);
+        Comment commentForDelete = commentRepository.getWithNewsId(commentId, newsId);
+        if (commentForDelete != null) {
+            commentRepository.delete(commentForDelete);
             return "Comment with id: " + commentId + " deleted";
         } else {
-            throw new NoSuchElementException("unable to delete comment");
+            throw new NoSuchElementException("unable to delete comment (id=" + commentId + ") in News (id=" + newsId + ")");
         }
+    }
+
+    @Loggable
+    public List<Comment> commentFilter(Long newsId, @Nullable String text, @Nullable String username) {
+        return commentRepository.filter(newsId, text, username);
     }
 }

@@ -1,9 +1,13 @@
 package com.github.sverzh.newsService.service;
 
 import com.github.sverzh.newsService.exception.CustomEmptyDataException;
+import com.github.sverzh.newsService.logging.Loggable;
 import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,7 @@ public class NewsService {
     }
 
     @Transactional
+    @Loggable
     public News getNewsById(Long newsId) {
         Optional<News> newsGet = newsRepository.findById(newsId);
         if (newsGet.isPresent()) {
@@ -31,16 +36,19 @@ public class NewsService {
     }
 
     @Transactional
-    public List<News> getAllNews() {
-        return newsRepository.findAll();
+    @Loggable
+    public Page<News> getAllNews(Pageable pageable) {
+        return newsRepository.findAll(pageable);
     }
 
     @Transactional
+    @Loggable
     public News createNews(News news) {
         return newsRepository.save(news);
     }
 
     @Transactional
+    @Loggable
     public News updateNews(News source, Long newsId) {
         Optional<News> newsForUpdate = newsRepository.findById(newsId);
         if (newsForUpdate.isPresent()) {
@@ -51,11 +59,12 @@ public class NewsService {
             newsRepository.save(target);
             return target;
         } else {
-            throw new CustomEmptyDataException("unable to update user");
+            throw new CustomEmptyDataException("unable to update news");
         }
     }
 
     @Transactional
+    @Loggable
     public String deleteNews(Long newsId) {
         Optional<News> newsForDelete = newsRepository.findById(newsId);
         if (newsForDelete.isPresent()) {
@@ -64,6 +73,10 @@ public class NewsService {
         } else {
             throw new CustomEmptyDataException("unable to delete news");
         }
+    }
+    @Loggable
+    public List<News> newsFilter(@Nullable String title, @Nullable String text) {
+        return newsRepository.filter(title, text);
     }
 
 }

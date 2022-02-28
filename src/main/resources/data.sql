@@ -1,8 +1,8 @@
 INSERT INTO NEWS (TITLE, TEXT, DATE)
-VALUES ('News 1', 'Description', '2022-01-01'),
-       ('News 2', 'Description', '2022-01-02'),
-       ('News 3', 'Description', '2022-01-03'),
-       ('News 4', 'Description', '2022-01-04'),
+VALUES ('News 1', 'Description1', '2022-01-01'),
+       ('News 2', 'Description1', '2022-01-02'),
+       ('News 3', 'Description2', '2022-01-03'),
+       ('News 4', 'Description3', '2022-01-04'),
        ('News 5', 'Description', '2022-01-05'),
        ('News 6', 'Description', '2022-01-06'),
        ('News 7', 'Description', '2022-01-07'),
@@ -22,6 +22,9 @@ VALUES ('News 1', 'Description', '2022-01-01'),
 
 INSERT INTO COMMENTS (USERNAME, TEXT, DATE, NEWS_ID)
 VALUES ('User_1', 'Comment1', current_date, 1),
+       ('User_2', 'Comment2', current_date, 1),
+       ('User_3', 'Comment3', current_date, 1),
+       ('User_4', 'Comment4', current_date, 1),
        ('User_1', 'Comment1', current_date, 2),
        ('User_1', 'Comment1', current_date, 3),
        ('User_1', 'Comment1', current_date, 4),

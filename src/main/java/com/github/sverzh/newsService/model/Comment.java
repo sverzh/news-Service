@@ -34,5 +34,15 @@ public class Comment {
     @JsonIgnore
     private News news;
 
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", date=" + date +
+                ", text='" + text + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
+
 }
 
