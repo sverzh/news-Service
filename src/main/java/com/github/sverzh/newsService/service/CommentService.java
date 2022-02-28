@@ -1,6 +1,7 @@
 package com.github.sverzh.newsService.service;
 
 import com.github.sverzh.newsService.exception.CustomEmptyDataException;
+import com.github.sverzh.newsService.logging.Loggable;
 import com.github.sverzh.newsService.model.Comment;
 import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.repository.CommentRepository;
@@ -28,16 +29,18 @@ public class CommentService {
         this.newsRepository = newsRepository;
     }
 
+    @Loggable
     public Page<Comment> getAllCommentsByNewsId(Long newsId, Pageable pageable) {
         Optional<News> newsFindOptional = newsRepository.findById(newsId);
         if (newsFindOptional.isPresent()) {
-            return commentRepository.findAllByNews(newsFindOptional.get(),pageable);
+            return commentRepository.findAllByNews(newsFindOptional.get(), pageable);
         } else {
             throw new NoSuchElementException("No news with id:" + newsId + " was found");
         }
     }
 
     @Transactional
+    @Loggable
     public Comment createComment(Comment comment, Long newsId) {
         Optional<News> commentNewsOptional = newsRepository.findById(newsId);
         if (commentNewsOptional.isPresent()) {
@@ -50,11 +53,13 @@ public class CommentService {
     }
 
     @Transactional
+    @Loggable
     public Comment getComment(Long commentId, Long newsId) {
         return commentRepository.getWithNewsId(commentId, newsId);
     }
 
     @Transactional
+    @Loggable
     public Comment updateComment(Comment source, Long commentId, Long newsId) {
         Optional<Comment> commentForUpdate = commentRepository.findById(commentId);
         Optional<News> newsFindOptional = newsRepository.findById(newsId);
@@ -71,16 +76,18 @@ public class CommentService {
     }
 
     @Transactional
+    @Loggable
     public String deleteComment(Long commentId, Long newsId) {
         Comment commentForDelete = commentRepository.getWithNewsId(commentId, newsId);
-        if (commentForDelete!=null) {
+        if (commentForDelete != null) {
             commentRepository.delete(commentForDelete);
             return "Comment with id: " + commentId + " deleted";
         } else {
-            throw new NoSuchElementException("unable to delete comment (id="+commentId+") in News (id="+newsId+")");
+            throw new NoSuchElementException("unable to delete comment (id=" + commentId + ") in News (id=" + newsId + ")");
         }
     }
 
+    @Loggable
     public List<Comment> commentFilter(Long newsId, @Nullable String text, @Nullable String username) {
         return commentRepository.filter(newsId, text, username);
     }
