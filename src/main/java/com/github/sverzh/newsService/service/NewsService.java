@@ -4,6 +4,8 @@ import com.github.sverzh.newsService.exception.CustomEmptyDataException;
 import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,8 @@ public class NewsService {
     }
 
     @Transactional
-    public List<News> getAllNews() {
-        return newsRepository.findAll();
+    public Page<News> getAllNews(Pageable pageable) {
+        return newsRepository.findAll(pageable);
     }
 
     @Transactional

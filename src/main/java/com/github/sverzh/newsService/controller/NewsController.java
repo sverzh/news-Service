@@ -3,6 +3,9 @@ package com.github.sverzh.newsService.controller;
 import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +23,8 @@ public class NewsController {
     }
 
     @GetMapping("/news")
-    public ResponseEntity<List<News>> getAllNews() {
-        List<News> result = newsService.getAllNews();
+    public ResponseEntity<Page<News>> getAllNews(@PageableDefault(page = 0, size = 4) Pageable pageable) {
+        Page<News> result = newsService.getAllNews(pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

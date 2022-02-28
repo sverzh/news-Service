@@ -6,6 +6,8 @@ import com.github.sverzh.newsService.model.News;
 import com.github.sverzh.newsService.repository.CommentRepository;
 import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +27,10 @@ public class CommentService {
         this.newsRepository = newsRepository;
     }
 
-    public List<Comment> getAllCommentsByNewsId(Long newsId) {
+    public Page<Comment> getAllCommentsByNewsId(Long newsId, Pageable pageable) {
         Optional<News> newsFindOptional = newsRepository.findById(newsId);
         if (newsFindOptional.isPresent()) {
-            return commentRepository.findAllByNews(newsFindOptional.get());
+            return commentRepository.findAllByNews(newsFindOptional.get(),pageable);
         } else {
             throw new NoSuchElementException("No news with id:" + newsId + " was found");
         }
