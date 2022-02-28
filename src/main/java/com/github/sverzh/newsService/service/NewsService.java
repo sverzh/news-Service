@@ -51,7 +51,7 @@ public class NewsService {
             newsRepository.save(target);
             return target;
         } else {
-            throw new CustomEmptyDataException("unable to update user");
+            throw new CustomEmptyDataException("unable to update news");
         }
     }
 
