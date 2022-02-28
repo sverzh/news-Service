@@ -6,6 +6,7 @@ import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +67,10 @@ public class NewsService {
         } else {
             throw new CustomEmptyDataException("unable to delete news");
         }
+    }
+
+    public List<News> newsFilter(@Nullable String title, @Nullable String text) {
+        return newsRepository.filter(title, text);
     }
 
 }

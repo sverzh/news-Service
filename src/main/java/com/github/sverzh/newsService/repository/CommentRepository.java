@@ -18,4 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     @Query("SELECT c FROM Comment c join fetch c.news where c.id=?1 and c.news.id=?2")
     Comment getWithNewsId(@Param("id") Long id, @Param("news_id")Long newsId);
 
+    @Query("SELECT c FROM Comment c join fetch c.news WHERE (c.text LIKE %:text% or c.username LIKE %:username%) and (c.news.id=:userId)")
+    List<Comment> filter(@Param("userId") Long userId, @Param("text") String text, @Param("username") String username);
+
 }

@@ -29,5 +29,15 @@ public class News {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "news")
     private List<Comment> comments;
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,5 +50,13 @@ public class NewsController {
     @DeleteMapping("/news/{id}")
     public ResponseEntity<String> deleteNews(@PathVariable Long id){
         return new ResponseEntity<>(newsService.deleteNews(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/news/filter")
+    public List<News> filter(
+            @RequestParam @Nullable String title,
+            @RequestParam @Nullable String text
+    ) {
+        return newsService.newsFilter(title,text);
     }
 }

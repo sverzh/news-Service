@@ -8,6 +8,7 @@ import com.github.sverzh.newsService.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,5 +81,9 @@ public class CommentService {
         } else {
             throw new NoSuchElementException("unable to delete comment");
         }
+    }
+
+    public List<Comment> commentFilter(Long newsId, @Nullable String text, @Nullable String username) {
+        return commentRepository.filter(newsId, text, username);
     }
 }
