@@ -72,14 +72,12 @@ public class CommentService {
 
     @Transactional
     public String deleteComment(Long commentId, Long newsId) {
-        Optional<Comment> commentForDelete = commentRepository.findById(commentId);
-        Optional<News> newsFindOptional = newsRepository.findById(newsId);
-        if (commentForDelete.isPresent() && newsFindOptional.isPresent()) {
-            Comment comment = commentForDelete.get();
-            commentRepository.delete(comment);
+        Comment commentForDelete = commentRepository.getWithNewsId(commentId, newsId);
+        if (commentForDelete!=null) {
+            commentRepository.delete(commentForDelete);
             return "Comment with id: " + commentId + " deleted";
         } else {
-            throw new NoSuchElementException("unable to delete comment");
+            throw new NoSuchElementException("unable to delete comment (id="+commentId+") in News (id="+newsId+")");
         }
     }
 
